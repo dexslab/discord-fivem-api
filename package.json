@@ -3,9 +3,6 @@
   "version": "2.0.6",
   "description": "A Node.js package to interact with FiveM servers, allowing you to retrieve server data, player information, and resources. Ideal for Discord bot integration or standalone Node.js applications.",
   "type": "module",
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "build": "vite build",
     "test": "echo \"Error: no test specified\" && exit 1"
