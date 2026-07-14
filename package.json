@@ -25,10 +25,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git@github.com:xliel/discord-fivem-api.git"
+    "url": "git@github.com:dexslab/discord-fivem-api.git"
   },
   "bugs": {
-    "url": "https://github.com/xliel/discord-fivem-api/issues"
+    "url": "https://github.com/dexslab/discord-fivem-api/issues"
   },
   "author": "xliel <https://discord.com/users/417398665670295572>",
   "license": "MIT",
