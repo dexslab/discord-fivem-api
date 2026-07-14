@@ -14,7 +14,7 @@ export interface DiscordFivemApiOptions {
 }
 
 // Define DiscordFivemApi class
-class DiscordFivemApi extends EventEmitter {
+export class DiscordFivemApi extends EventEmitter {
   options: DiscordFivemApiOptions;
   useStructure: boolean;
   _players: (Player | PlayerData)[] = [];
@@ -255,8 +255,6 @@ class DiscordFivemApi extends EventEmitter {
     }, this.options?.interval || 2500);
   }
 }
-
-export default DiscordFivemApi;
 
 /**
  * The DiscordFivemApi class.

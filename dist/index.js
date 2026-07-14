@@ -138,22 +138,23 @@ var DiscordFivemApi = class extends EventEmitter {
 	resources;
 	constructor(options, init = false) {
 		super();
-		if (!this.options) this.options = {};
-		if (!this.options?.port) this.options.port = 30120;
-		if (!this.options?.useStructure) this.options.useStructure = false;
-		if (!this.options?.interval) this.options.interval = 2500;
-		this.options = options;
-		if (!this?.options?.address) throw new DfaError("NO_ADDRESS", "No address was provided.");
-		if (!this?.options?.port) throw new DfaError("NO_PORT", "No port was provided.");
-		if (typeof this?.options?.address !== "string") throw new DfaTypeError("INVALID_ADDRESS", "The address option must be a string.");
-		if (typeof this?.options?.port !== "number") throw new DfaTypeError("INVALID_PORT", "The port option must be a number.");
-		if (typeof this?.options?.interval !== "number") throw new DfaTypeError("INVALID_INTERVAL", "The interval option must be a number.");
+		this.options = {
+			port: 30120,
+			useStructure: false,
+			interval: 2500,
+			...options
+		};
+		if (!this.options.address) throw new DfaError("NO_ADDRESS", "No address was provided.");
+		if (!this.options.port) throw new DfaError("NO_PORT", "No port was provided.");
+		if (typeof this.options.address !== "string") throw new DfaTypeError("INVALID_ADDRESS", "The address option must be a string.");
+		if (typeof this.options.port !== "number") throw new DfaTypeError("INVALID_PORT", "The port option must be a number.");
+		if (typeof this.options.interval !== "number") throw new DfaTypeError("INVALID_INTERVAL", "The interval option must be a number.");
 		if (typeof init !== "boolean") throw new DfaTypeError("INVALID_INIT", "The init option must be a boolean.");
-		if (this?.options?.useStructure !== void 0 && typeof this?.options?.useStructure !== "boolean") throw new DfaTypeError("INVALID_USE_STRUCTURE", "The useStructure option must be a boolean.");
+		if (this.options.useStructure !== void 0 && typeof this.options.useStructure !== "boolean") throw new DfaTypeError("INVALID_USE_STRUCTURE", "The useStructure option must be a boolean.");
 		this._players = [];
-		this.useStructure = options?.useStructure;
-		this.address = options.address;
-		this.port = options.port || 30120;
+		this.useStructure = this.options.useStructure ?? false;
+		this.address = this.options.address;
+		this.port = this.options.port;
 		if (init) this._init();
 	}
 	get players() {

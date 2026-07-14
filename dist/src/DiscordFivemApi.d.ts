@@ -1,14 +1,21 @@
 import { EventEmitter } from 'events';
 import { Player, ServerData } from './structures/index';
 import { PlayerData } from './structures/Player';
-declare class DiscordFivemApi extends EventEmitter {
-    options: any;
+export interface DiscordFivemApiOptions {
+    address: string;
+    port?: number;
+    useStructure?: boolean;
+    interval?: number;
+    [key: string]: any;
+}
+export declare class DiscordFivemApi extends EventEmitter {
+    options: DiscordFivemApiOptions;
     useStructure: boolean;
     _players: (Player | PlayerData)[];
     address: string;
     port: number;
     resources: string[];
-    constructor(options: any, init?: boolean);
+    constructor(options: DiscordFivemApiOptions, init?: boolean);
     get players(): (PlayerData | Player)[];
     set players(players: (PlayerData | Player)[]);
     getStatus(): Promise<"online" | "offline">;
@@ -18,7 +25,6 @@ declare class DiscordFivemApi extends EventEmitter {
     getMaxPlayers(): Promise<string>;
     _init(): Promise<void>;
 }
-export default DiscordFivemApi;
 /**
  * The DiscordFivemApi class.
  * @typedef {DiscordFivemApi} DiscordFivemApi

@@ -1,5 +1,5 @@
 import { version } from '../package.json';
-import { default as DiscordFivemApi } from './DiscordFivemApi';
+import { DiscordFivemApi } from './DiscordFivemApi';
 import { Player, ServerData } from './structures/index';
 /**
  * Exports the version number, main API class, and structure classes.
