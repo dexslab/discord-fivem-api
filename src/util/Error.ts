@@ -4,10 +4,10 @@ const kCode = Symbol('code');
 /**
  * Creates a custom error class that extends a base error class (Error or TypeError).
  *
- * @param {Error} [ErrorBase=global.Error] - The base error class to extend (default is the built-in Error).
+ * @param {Error} [ErrorBase= Error] - The base error class to extend (default is the built-in Error).
  * @returns {class} - A custom error class with enhanced functionality.
  */
-function createErrorMessage(ErrorBase = global.Error) {
+function createErrorMessage(ErrorBase = Error) {
   // Define a new error class extending the provided base error class
   class DiscordFivemApiError extends ErrorBase {
     /**
@@ -57,9 +57,12 @@ function createErrorMessage(ErrorBase = global.Error) {
   return DiscordFivemApiError;
 }
 
+const DfaError = createErrorMessage(Error);
+const DfaTypeError = createErrorMessage(TypeError);
+
 // Export the createErrorMessage function, along with pre-defined instances for Error and TypeError
-module.exports = {
+export {
   createErrorMessage,
-  Error: createErrorMessage(Error), // Custom Error class
-  TypeError: createErrorMessage(TypeError), // Custom TypeError class
+  DfaError ,
+  DfaTypeError,
 };

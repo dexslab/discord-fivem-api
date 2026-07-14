@@ -1,11 +1,11 @@
 'use strict'; // Enforcing strict mode for better error checking and security
 
 // Import the Player and Server classes from their respective files
-const Player = require('./Player');
-const Server = require('./Server');
+import Player from './Player';
+import ServerData from './Server';
 
 // Export the Player and Server classes to make them accessible when this module is required
-module.exports = {
+export {
   Player,
-  Server,
+  ServerData,
 };

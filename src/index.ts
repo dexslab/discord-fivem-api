@@ -1,11 +1,11 @@
 // Importing the version number from the package.json file
-const { version } = require('../package.json');
+import { version } from '../package.json' with { type: "json" };
 
 // Importing the main DiscordFivemApi class
-const DiscordFivemApi = require('./DiscordFivemApi');
+import DiscordFivemApi from './DiscordFivemApi';
 
 // Importing the Player and Server classes from the structures directory
-const { Player, Server } = require('./structures/index');
+import { Player, ServerData } from './structures/index';
 
 /**
  * Exports the version number, main API class, and structure classes.
@@ -15,9 +15,9 @@ const { Player, Server } = require('./structures/index');
  * - `Player`: Class representing player data in the server.
  * - `Server`: Class representing server data.
  */
-module.exports = {
+export {
   version,
   DiscordFivemApi,
   Player,
-  Server,
+  ServerData,
 };

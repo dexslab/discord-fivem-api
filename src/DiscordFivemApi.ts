@@ -1,13 +1,18 @@
 // Import required modules
-const { EventEmitter } = require('events');
-const axios = require('axios');
-const { Player, Server: ServerData } = require('./structures/index');
-const { Error: DfaError, TypeError: DfaTypeError } = require('./util/Error');
+import { EventEmitter } from 'events';
+import { Player, ServerData } from './structures/index';
+import { DfaError , DfaTypeError } from './util/Error';
+import { ServerInfo } from './structures/Server';
+import { Players, PlayerData } from './structures/Player';
 
 // Define DiscordFivemApi class
 class DiscordFivemApi extends EventEmitter {
   options;
-
+  useStructure: boolean;
+  _players: (Player | PlayerData)[] = [];
+  address: string;
+  port: number;
+  resources: string[];
   // Constructor
   constructor(options, init = false) {
     super();
@@ -85,117 +90,108 @@ class DiscordFivemApi extends EventEmitter {
   }
 
   // Get server status
-  getStatus() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`http://${this.address}:${this.port}/info.json`, {
-          timeout: 5000,
-        })
-        .then((res) => {
-          resolve('online');
-        })
-        .catch(() => {
-          resolve('offline');
-        });
-    });
+  async getStatus() {
+    try {
+      const res = await fetch(`http://${this.address}:${this.port}/info.json`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      return 'online';
+    } catch {
+      return 'offline';
+    }
   }
 
   // Get server data
-  getServerData() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`http://${this.address}:${this.port}/info.json`, {
-          timeout: 5000,
-        })
-        .then((res) => {
-          if (this.useStructure) {
-            resolve(new ServerData(res.data));
-          } else resolve(res.data);
-        })
-        .catch((err) => {
-          reject({
-            error: {
-              message: err.message,
-              stack: err.stack,
-            },
-            data: {},
-          });
-        });
-    });
+  async getServerData() {
+    try {
+      const res = await fetch(`http://${this.address}:${this.port}/info.json`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data: ServerInfo = await res.json() as ServerInfo;
+      if (this.useStructure) {
+        return new ServerData(data);
+      }
+      return data;
+    } catch (err: any) {
+      throw {
+        error: {
+          message: err.message,
+          stack: err.stack,
+        },
+        data: {},
+      };
+    }
   }
 
   // Get server players
-  getServerPlayers() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`http://${this.address}:${this.port}/players.json`, {
-          timeout: 5000,
-        })
-        .then((res) => {
-          if (this.useStructure) {
-            const players = [];
-            for (const player of res.data) {
-              players.push(new Player(player));
-            }
-            this.players = players;
+  async getServerPlayers() {
+    try {
+      const res = await fetch(`http://${this.address}:${this.port}/players.json`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data: Players = await res.json() as Players;
+      if (this.useStructure) {
+        const players = [];
+        for (const player of data) {
+          players.push(new Player(player));
+        }
+        this.players = players;
 
-            resolve(players);
-          } else resolve(res.data);
-        })
-        .catch((err) => {
-          reject({
-            error: {
-              message: err.message,
-              stack: err.stack,
-            },
-            players: [],
-          });
-        });
-    });
+        return players;
+      }
+      return data;
+    } catch (err: any) {
+      throw {
+        error: {
+          message: err.message,
+          stack: err.stack,
+        },
+        players: [],
+      };
+    }
   }
 
   // Get number of players online
-  getPlayersOnline() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`http://${this.address}:${this.port}/players.json`, {
-          timeout: 5000,
-        })
-        .then((res) => {
-          resolve(res.data.length);
-        })
-        .catch((err) => {
-          reject({
-            error: {
-              message: err.message,
-              stack: err.stack,
-            },
-            playersOnline: 0,
-          });
-        });
-    });
+  async getPlayersOnline() {
+    try {
+      const res = await fetch(`http://${this.address}:${this.port}/players.json`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data: Players = await res.json() as Players;
+      return data.length;
+    } catch (err: any) {
+      throw {
+        error: {
+          message: err.message,
+          stack: err.stack,
+        },
+        playersOnline: 0,
+      };
+    }
   }
 
   // Get maximum number of players
-  getMaxPlayers() {
-    return new Promise((resolve, reject) => {
-      axios
-        .get(`http://${this.address}:${this.port}/info.json`, {
-          timeout: 5000,
-        })
-        .then((res) => {
-          resolve(res.data.vars.sv_maxClients);
-        })
-        .catch((err) => {
-          reject({
-            error: {
-              message: err.message,
-              stack: err.stack,
-            },
-            maxPlayers: 0,
-          });
-        });
-    });
+  async getMaxPlayers() {
+    try {
+      const res = await fetch(`http://${this.address}:${this.port}/info.json`, {
+        signal: AbortSignal.timeout(5000),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const data: ServerInfo = await res.json() as ServerInfo;
+      return data.vars.sv_maxClients;
+    } catch (err: any) {
+      throw {
+        error: {
+          message: err.message,
+          stack: err.stack,
+        },
+        maxPlayers: 0,
+      };
+    }
   }
   
 
@@ -209,13 +205,13 @@ class DiscordFivemApi extends EventEmitter {
     ]);
 
     this.players = players;
-    this.resources = serverData?.resources ?? [];
+    this.resources = (serverData as ServerInfo)?.resources ?? [];
 
     this.emit('readyPlayers', players);
     this.emit('readyResources', this.resources);
 
     setInterval(async () => {
-      const newPlayers = await this.getServerPlayers().catch(() => []);
+      const newPlayers = await this.getServerPlayers().catch(() => []) as (Player | PlayerData)[];
       if (this.players.length != newPlayers.length) {
         if (this.players.length < newPlayers.length) {
           for (const player of newPlayers) {
@@ -233,7 +229,7 @@ class DiscordFivemApi extends EventEmitter {
       }
 
       const serverData2 = await this.getServerData().catch(() => {});
-      const newResources = serverData2?.resources ?? [];
+      const newResources = (serverData2 as ServerInfo)?.resources ?? [];
       if (this.resources?.length != newResources?.length) {
         if (this.resources?.length < newResources?.length) {
           for (const resource of newResources) {
@@ -251,7 +247,7 @@ class DiscordFivemApi extends EventEmitter {
   }
 }
 
-module.exports = DiscordFivemApi;
+export default DiscordFivemApi;
 
 /**
  * The DiscordFivemApi class.
