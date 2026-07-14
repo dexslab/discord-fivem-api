@@ -5,48 +5,57 @@ import { DfaError , DfaTypeError } from './util/Error';
 import { ServerInfo } from './structures/Server';
 import { Players, PlayerData } from './structures/Player';
 
+export interface DiscordFivemApiOptions {
+  address: string;
+  port?: number;
+  useStructure?: boolean;
+  interval?: number;
+  [key: string]: any;
+}
+
 // Define DiscordFivemApi class
 class DiscordFivemApi extends EventEmitter {
-  options;
+  options: DiscordFivemApiOptions;
   useStructure: boolean;
   _players: (Player | PlayerData)[] = [];
   address: string;
   port: number;
   resources: string[];
   // Constructor
-  constructor(options, init = false) {
+  constructor(options: DiscordFivemApiOptions, init: boolean = false) {
     super();
 
     // Set default options if not provided
-    if (!this.options) this.options = {};
-    if (!this.options?.port) this.options.port = 30120;
-    if (!this.options?.useStructure) this.options.useStructure = false;
-    if (!this.options?.interval) this.options.interval = 2500;
-    this.options = options;
+    this.options = {
+      port: 30120,
+      useStructure: false,
+      interval: 2500,
+      ...options,
+    };
 
     // Validate options
-    if (!this?.options?.address) {
+    if (!this.options.address) {
       throw new DfaError('NO_ADDRESS', 'No address was provided.');
     }
-    if (!this?.options?.port) {
+    if (!this.options.port) {
       throw new DfaError('NO_PORT', 'No port was provided.');
     }
 
-    if (typeof this?.options?.address !== 'string') {
+    if (typeof this.options.address !== 'string') {
       throw new DfaTypeError(
         'INVALID_ADDRESS',
         'The address option must be a string.'
       );
     }
 
-    if (typeof this?.options?.port !== 'number') {
+    if (typeof this.options.port !== 'number') {
       throw new DfaTypeError(
         'INVALID_PORT',
         'The port option must be a number.'
       );
     }
 
-    if (typeof this?.options?.interval !== 'number') {
+    if (typeof this.options.interval !== 'number') {
       throw new DfaTypeError(
         'INVALID_INTERVAL',
         'The interval option must be a number.'
@@ -60,8 +69,8 @@ class DiscordFivemApi extends EventEmitter {
       );
     }
     if (
-      this?.options?.useStructure !== undefined &&
-      typeof this?.options?.useStructure !== 'boolean'
+      this.options.useStructure !== undefined &&
+      typeof this.options.useStructure !== 'boolean'
     ) {
       throw new DfaTypeError(
         'INVALID_USE_STRUCTURE',
@@ -71,10 +80,10 @@ class DiscordFivemApi extends EventEmitter {
 
     // Initialize properties
     this._players = [];
-    this.useStructure = options?.useStructure;
+    this.useStructure = this.options.useStructure ?? false;
 
-    this.address = options.address;
-    this.port = options.port || 30120;
+    this.address = this.options.address;
+    this.port = this.options.port;
 
     // Call _init method if init is true
     if (init) this._init();

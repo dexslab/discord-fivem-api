@@ -2,7 +2,7 @@
 import { version } from '../package.json' with { type: "json" };
 
 // Importing the main DiscordFivemApi class
-import DiscordFivemApi from './DiscordFivemApi';
+import DiscordFivemApi, { DiscordFivemApiOptions } from './DiscordFivemApi';
 
 // Importing the Player and Server classes from the structures directory
 import { Player, ServerData } from './structures/index';
@@ -18,6 +18,7 @@ import { Player, ServerData } from './structures/index';
 export {
   version,
   DiscordFivemApi,
+  DiscordFivemApiOptions,
   Player,
   ServerData,
 };
