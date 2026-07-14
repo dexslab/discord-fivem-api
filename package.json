@@ -29,9 +29,9 @@
   },
   "author": "xliel <https://discord.com/users/417398665670295572>",
   "license": "MIT",
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "@typescript/typescript6": "^6.0.2",
     "typescript": "^7.0.2",
     "vite": "^8.1.4",
     "vite-plugin-dts": "^5.0.3"
